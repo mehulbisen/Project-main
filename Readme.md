@@ -1,2 +1,2 @@
 Dev - Project
-Terrafor code for Three tier web application infrastructure
+Terraform code for Three tier web application infrastructure
