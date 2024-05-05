@@ -81,7 +81,7 @@ resource "aws_route" "nat_gateway_route" {
 
 # Create Security Group
 resource "aws_security_group" "project_security_group" {
-  vpc_id = aws_vpc.my_vpc.id
+  vpc_id = aws_vpc.project_vpc.id
 
   ingress {
     from_port   = 22
@@ -105,41 +105,3 @@ resource "aws_security_group" "project_security_group" {
   }
 }
 
-# Database_instance
-resource "aws_instance" "my_instance" {
-  ami           = "ami-12345678"  
-  instance_type = "t2.micro"     
-  subnet_id     = aws_subnet.public_subnet.id
-  key_name      = aws_key_pair.my_key_pair.key_name
-  security_groups = [aws_security_group.project_security_group.name]
-
-  tags = {
-    Name = "Database_instance"
-  }
-}
-
-# Application_server_instance
-resource "aws_instance" "aap_server" {
-  ami           = "ami-12345678"  
-  instance_type = "t2.micro"     
-  subnet_id     = aws_subnet.private_subnet.id
-  key_name      = aws_key_pair.my_key_pair.key_name
-  security_groups = [aws_security_group.project_security_group.name]
-
-  tags = {
-    Name = "App_server_instance"
-  }
-}
-
-# Frontend_Server
-resource "aws_instance" "Frontend_Server" {
-  ami           = "ami-12345678"  
-  instance_type = "t2.micro"     
-  subnet_id     = aws_subnet.private_subnet.id
-  key_name      = aws_key_pair.my_key_pair.key_name
-  security_groups = [aws_security_group.project_security_group.name]
-
-  tags = {
-    Name = "frontend_server_instance"
-  }
-}
