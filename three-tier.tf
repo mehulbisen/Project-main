@@ -63,7 +63,7 @@ resource "aws_route_table_association" "private_route_table_association" {
 
 # Create Elastic IP
 resource "aws_eip" "project_eip" {
-  vpc = true
+  domain = "vpc"
 }
 
 # Create NAT Gateway
