@@ -149,7 +149,7 @@ resource "aws_instance" "Database_Server" {
   ami           = "ami-0dfdc165e7af15242"  
   instance_type = "t2.micro"     
   subnet_id     = aws_subnet.private_subnet.id
-  key_name      = aws_key_pair.my_key_pair.key_name
+  key_name      = "ireland-m"
   security_groups = [aws_security_group.project_security_group.name]
 
   tags = {
