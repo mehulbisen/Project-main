@@ -105,3 +105,54 @@ resource "aws_security_group" "project_security_group" {
   }
 }
 
+# Database_instance
+resource "aws_instance" "my_instance" {
+  ami           = "ami-12345678"  
+  instance_type = "t2.micro"     
+  subnet_id     = aws_subnet.public_subnet.id
+  key_name      = "ireland-m"
+  security_groups = [aws_security_group.project_security_group.name]
+
+  tags = {
+    Name = "Database_instance"
+  }
+}
+
+# Application_server_instance
+resource "aws_instance" "aap_server" {
+  ami           = "ami-0dfdc165e7af15242"  
+  instance_type = "t2.micro"     
+  subnet_id     = aws_subnet.private_subnet.id
+  key_name      = "ireland-m"
+  security_groups = [aws_security_group.project_security_group.name]
+
+  tags = {
+    Name = "App_server_instance"
+  }
+}
+
+# Frontend_Server
+resource "aws_instance" "Frontend_Server" {
+  ami           = "ami-0dfdc165e7af15242"  
+  instance_type = "t2.micro"     
+  subnet_id     = aws_subnet.private_subnet.id
+  key_name      = "ireland-m"
+  security_groups = [aws_security_group.project_security_group.name]
+
+  tags = {
+    Name = "frontend_server_instance"
+  }
+}
+
+# Database_Server
+resource "aws_instance" "Database_Server" {
+  ami           = "ami-0dfdc165e7af15242"  
+  instance_type = "t2.micro"     
+  subnet_id     = aws_subnet.private_subnet.id
+  key_name      = aws_key_pair.my_key_pair.key_name
+  security_groups = [aws_security_group.project_security_group.name]
+
+  tags = {
+    Name = "database_server_instance"
+  }
+}
