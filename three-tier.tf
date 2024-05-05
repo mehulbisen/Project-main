@@ -105,21 +105,8 @@ resource "aws_security_group" "project_security_group" {
   }
 }
 
-# Database_instance
-resource "aws_instance" "my_instance" {
-  ami           = "ami-12345678"  
-  instance_type = "t2.micro"     
-  subnet_id     = aws_subnet.public_subnet.id
-  key_name      = "ireland-m"
-  security_groups = [aws_security_group.project_security_group.name]
-
-  tags = {
-    Name = "Database_instance"
-  }
-}
-
 # Application_server_instance
-resource "aws_instance" "aap_server" {
+resource "aws_instance" "Application_server" {
   ami           = "ami-0dfdc165e7af15242"  
   instance_type = "t2.micro"     
   subnet_id     = aws_subnet.private_subnet.id
