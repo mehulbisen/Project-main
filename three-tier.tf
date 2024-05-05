@@ -9,7 +9,7 @@ resource "aws_vpc" "project_vpc" {
 
 # Creating Public Subnet
 resource "aws_subnet" "public_subnet" {
-  vpc_id     = aws_vpc.project_vpc
+  vpc_id     = aws_vpc.project_vpc.id
   cidr_block = "10.0.1.0/24"
   tags = {
     Name = "public_subnet"
@@ -18,7 +18,7 @@ resource "aws_subnet" "public_subnet" {
 
 # Creating Private Subnet
 resource "aws_subnet" "private_subnet" {
-  vpc_id     = aws_vpc.project_vpc
+  vpc_id     = aws_vpc.project_vpc.id
   cidr_block = "10.0.18.0/24"
   tags = {
     Name = "private_subnet"
