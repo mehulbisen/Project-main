@@ -106,7 +106,7 @@ resource "aws_security_group" "project_security_group" {
 }
 
 # Creating RDS 
-resource "aws_db_instance" "myinstance" {
+resource "aws_db_instance" "db_instance" {
   engine               = "mysql"
   identifier           = "myrdsinstance"
   allocated_storage    =  20
