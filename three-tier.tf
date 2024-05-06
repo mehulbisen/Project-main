@@ -16,12 +16,21 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
-# Creating Private Subnet
+# Creating Private Subnet1
 resource "aws_subnet" "private_subnet" {
   vpc_id     = aws_vpc.project_vpc.id
   cidr_block = "10.0.18.0/24"
   tags = {
     Name = "private_subnet"
+  }
+}
+
+# Creating Private Subnet2
+resource "aws_subnet" "private_subnet2" {
+  vpc_id     = aws_vpc.project_vpc.id
+  cidr_block = "10.0.44.0/24"
+  tags = {
+    Name = "private_subnet2"
   }
 }
 
@@ -58,6 +67,12 @@ resource "aws_route_table" "private_route_table" {
 # Associate Route Table with Subnet
 resource "aws_route_table_association" "private_route_table_association" {
   subnet_id      = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+# Associate Route Table with subnet2
+resource "aws_route_table_association" "private_route_table_association" {
+  subnet_id      = aws_subnet.private_subnet2.id
   route_table_id = aws_route_table.private_route_table.id
 }
 
@@ -108,7 +123,7 @@ resource "aws_security_group" "project_security_group" {
 # Creating RDS Subnet Group
 resource "aws_db_subnet_group" "project_subnet_group" {
   name       = "project-subnet-group"
-  subnet_ids = [aws_subnet.private_subnet.id]
+  subnet_ids = [aws_subnet.private_subnet.id, aws_subnet.private_subnet2.id]
 }
 
 # Creating RDS 
