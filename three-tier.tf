@@ -140,6 +140,7 @@ resource "aws_db_instance" "my_rds_instance" {
   vpc_security_group_ids = [aws_security_group.project_security_group.id]
   publicly_accessible    = false 
   db_subnet_group_name = aws_db_subnet_group.project_subnet_group.name
+  skip_final_snapshot    = true
 }
 
 # Application_server_instance
