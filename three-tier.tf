@@ -112,6 +112,24 @@ resource "aws_instance" "Application_server" {
   subnet_id     = aws_subnet.private_subnet.id
   key_name      = "ireland-m"
   vpc_security_group_ids = [aws_security_group.project_security_group.id]
+  user_data = <<EOF
+#!/bin/bash
+yum install java-1.8.0-amazon-corretto -y
+cd /opt/
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.88/bin/apache-tomcat-9.0.88.tar.gz
+tar -xzf apache-tomcat-9.0.88.tar.gz 
+cd /opt/apache-tomcat-9.0.88/webapps/
+wget https://s3-us-west-2.amazonaws.com/studentapi-cit/student.war
+cd /opt/apache-tomcat-9.0.88/lib/
+wget https://s3-us-west-2.amazonaws.com/studentapi-cit/mysql-connector.jar
+cd /opt/apache-tomcat-9.0.88/bin/
+./catalina.sh start
+sleep 5
+./catalina.sh stop
+sleep 5
+./catalina.sh start
+
+EOF
 
   tags = {
     Name = "App_server_instance"
@@ -125,6 +143,14 @@ resource "aws_instance" "Frontend_Server" {
   subnet_id     = aws_subnet.private_subnet.id
   key_name      = "ireland-m"
   vpc_security_group_ids = [aws_security_group.project_security_group.id]
+  user_data = <<EOF
+#!/bin/bash
+yum install httpd -y
+systemctl start httpd
+systemctl enable httpd
+
+EOF
+
 
   tags = {
     Name = "frontend_server_instance"
@@ -138,6 +164,13 @@ resource "aws_instance" "Database_Server" {
   subnet_id     = aws_subnet.private_subnet.id
   key_name      = "ireland-m"
   vpc_security_group_ids = [aws_security_group.project_security_group.id]
+  user_data = <<EOF
+#!/bin/bash
+dnf install mariadb105-server -y
+systemctl start mariadb
+systemctl enable mariadb
+
+EOF
 
   tags = {
     Name = "database_server_instance"
