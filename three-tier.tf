@@ -111,7 +111,7 @@ resource "aws_instance" "Application_server" {
   instance_type = "t2.micro"     
   subnet_id     = aws_subnet.private_subnet.id
   key_name      = "ireland-m"
-  security_groups = [aws_security_group.project_security_group.name]
+  vpc_security_group_ids = [aws_security_group.project_security_group.id]
 
   tags = {
     Name = "App_server_instance"
@@ -124,7 +124,7 @@ resource "aws_instance" "Frontend_Server" {
   instance_type = "t2.micro"     
   subnet_id     = aws_subnet.private_subnet.id
   key_name      = "ireland-m"
-  security_groups = [aws_security_group.project_security_group.name]
+  vpc_security_group_ids = [aws_security_group.project_security_group.id]
 
   tags = {
     Name = "frontend_server_instance"
@@ -137,7 +137,7 @@ resource "aws_instance" "Database_Server" {
   instance_type = "t2.micro"     
   subnet_id     = aws_subnet.private_subnet.id
   key_name      = "ireland-m"
-  security_groups = [aws_security_group.project_security_group.name]
+  vpc_security_group_ids = [aws_security_group.project_security_group.id]
 
   tags = {
     Name = "database_server_instance"
