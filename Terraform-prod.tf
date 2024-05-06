@@ -11,6 +11,7 @@ resource "aws_vpc" "project_vpc" {
 resource "aws_subnet" "public_subnet" {
   vpc_id     = aws_vpc.project_vpc.id
   cidr_block = "10.0.1.0/24"
+  availability_zone = "eu-west-1a"
   tags = {
     Name = "public_subnet"
   }
@@ -20,6 +21,7 @@ resource "aws_subnet" "public_subnet" {
 resource "aws_subnet" "public_subnet2" {
   vpc_id     = aws_vpc.project_vpc.id
   cidr_block = "10.0.64.0/24"
+  availability_zone = "eu-west-1b"
   tags = {
     Name = "public_subnet2"
   }
@@ -217,5 +219,5 @@ resource "aws_autoscaling_group" "Demo-ASG" {
 # Attach target group to the load balancer
 resource "aws_lb_target_group_attachment" "Demo-TG-attachment" {
   target_group_arn = aws_lb_target_group.Demo-TG.arn
-  target_id        = aws_autoscaling_group.Demo-ASG.id
+  target_id        = aws_autoscaling_group.Demo-ASG.arn
 }
