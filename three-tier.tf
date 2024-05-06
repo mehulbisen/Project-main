@@ -106,19 +106,18 @@ resource "aws_security_group" "project_security_group" {
 }
 
 # Creating RDS 
-resource "aws_db_instance" "db_instance" {
-  engine               = "mysql"
-  identifier           = "myrdsinstance"
-  allocated_storage    =  20
-  engine_version       = "5.7"
-  instance_class       = "db.t3.micro"
-  username             = "admin"
-  password             = "redhat12345"
-  parameter_group_name = "default.mysql5.7"
+resource "aws_db_instance" "my_rds_instance" {
+  identifier             = "my-rds-instance"
+  allocated_storage      = 20
+  storage_type           = "gp2"
+  engine                 = "mysql" 
+  engine_version         = "5.7"
+  instance_class         = "db.t3.micro" 
+  username               = "admin"
+  password               = "redhat12345"
+  parameter_group_name   = "default.mysql5.7"
   vpc_security_group_ids = [aws_security_group.project_security_group.id]
-  skip_final_snapshot  = true
-  publicly_accessible =  true
-
+  publicly_accessible    = false 
 }
 
 # Application_server_instance
