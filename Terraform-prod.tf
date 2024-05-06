@@ -187,9 +187,3 @@ resource "aws_autoscaling_group" "Demo-ASG" {
     propagate_at_launch = true
   }
 }
-
-# Attach target group to the load balancer
-resource "aws_lb_target_group_attachment" "Demo-TG-attachment" {
-  target_group_arn = aws_lb_target_group.Demo-TG.arn
-  target_id        = aws_autoscaling_group.Demo-ASG.arn
-}
