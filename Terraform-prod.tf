@@ -31,6 +31,7 @@ resource "aws_subnet" "public_subnet2" {
 resource "aws_subnet" "private_subnet" {
   vpc_id     = aws_vpc.project_vpc.id
   cidr_block = "10.0.18.0/24"
+  availability_zone = "eu-west-1a"
   tags = {
     Name = "private_subnet"
   }
@@ -40,6 +41,7 @@ resource "aws_subnet" "private_subnet" {
 resource "aws_subnet" "private_subnet2" {
   vpc_id     = aws_vpc.project_vpc.id
   cidr_block = "10.0.44.0/24"
+  availability_zone = "eu-west-1b"
   tags = {
     Name = "private_subnet2"
   }
@@ -110,23 +112,16 @@ resource "aws_security_group" "project_security_group" {
   vpc_id = aws_vpc.project_vpc.id
 
   ingress {
-    from_port   = 22
-    to_port     = 22
+    from_port   = 0
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
+  
   egress {
     from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    to_port     = 65535
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -192,7 +187,7 @@ resource "aws_lb_listener" "demo_listener" {
 # Creating Launch Template
 resource "aws_launch_template" "application_launch_template" {
   name_prefix   = "Application_template"
-  image_id      = "ami-0dfdc165e7af15242"
+  image_id      = "ami-08cb8cf28f6a9e16b"
   instance_type = "t2.micro"
   vpc_security_group_ids = [aws_security_group.project_security_group.id]
   key_name = "ireland-m"
@@ -205,7 +200,7 @@ resource "aws_autoscaling_group" "Demo-ASG" {
   max_size              = 3
   desired_capacity      = 2
   vpc_zone_identifier   = [aws_subnet.private_subnet.id, aws_subnet.private_subnet2.id]
-  target_group_arns         = [aws_lb_target_group.Demo-TG.arn]
+  target_group_arns     = [aws_lb_target_group.Demo-TG.arn]
   launch_template {
     id      = aws_launch_template.application_launch_template.id
   }
