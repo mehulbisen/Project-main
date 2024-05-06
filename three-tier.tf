@@ -105,6 +105,12 @@ resource "aws_security_group" "project_security_group" {
   }
 }
 
+# Creating RDS Subnet Group
+resource "aws_db_subnet_group" "project_subnet_group" {
+  name       = "project-subnet-group"
+  subnet_ids = [aws_subnet.private_subnet.id]
+}
+
 # Creating RDS 
 resource "aws_db_instance" "my_rds_instance" {
   identifier             = "my-rds-instance"
@@ -118,6 +124,7 @@ resource "aws_db_instance" "my_rds_instance" {
   parameter_group_name   = "default.mysql5.7"
   vpc_security_group_ids = [aws_security_group.project_security_group.id]
   publicly_accessible    = false 
+  db_subnet_group_name = aws_db_subnet_group.project_subnet_group.name
 }
 
 # Application_server_instance
