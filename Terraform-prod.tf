@@ -16,6 +16,15 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
+# Creating Public Subnet2
+resource "aws_subnet" "public_subnet2" {
+  vpc_id     = aws_vpc.project_vpc.id
+  cidr_block = "10.0.64.0/24"
+  tags = {
+    Name = "public_subnet2"
+  }
+}
+
 # Creating Private Subnet1
 resource "aws_subnet" "private_subnet" {
   vpc_id     = aws_vpc.project_vpc.id
@@ -143,3 +152,64 @@ resource "aws_db_instance" "my_rds_instance" {
   skip_final_snapshot    = true
 }
 
+# Creating Load Balancer
+resource "aws_lb" "Demo-ALB" {
+  name               = "Demo-ALB"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.project_security_group.id]
+  subnets            = [aws_subnet.public_subnet.id, aws_subnet.public_subnet2.id]
+  
+  tags = {
+    Name = "Demo-ALB"
+  }
+}
+
+# Create a target group
+resource "aws_lb_target_group" "Demo-TG" {
+  name     = "Demo-TG"
+  port     = 80
+  protocol = "HTTP"
+  
+  vpc_id   = aws_vpc.project_vpc.id
+
+}
+
+# Attach target group to the load balancer
+resource "aws_lb_listener" "demo_listener" {
+  load_balancer_arn = aws_lb.Demo-ALB.arn
+  port              = 80
+  protocol          = "HTTP"
+  
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.Demo-TG.arn
+  }
+}
+
+# Creating Launch Template
+resource "aws_launch_template" "application_launch_template" {
+  name_prefix   = "Application_template"
+  image_id      = "ami-0dfdc165e7af15242"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.project_security_group.id]
+  key_name = "ireland-m"
+}
+
+# Creating AutoScaling Group
+resource "aws_autoscaling_group" "Demo-ASG" {
+  name                  = "Demo-ASG"
+  min_size              = 1
+  max_size              = 3
+  desired_capacity      = 2
+  vpc_zone_identifier   = [aws_subnet.private_subnet.id, aws_subnet.private_subnet2.id]
+  target_group_arns         = [aws_lb_target_group.Demo-TG.arn]
+  launch_template {
+    id      = aws_launch_template.application_launch_template.id
+  }
+  tag {
+    key                 = "Name"
+    value               = "application-instance"
+    propagate_at_launch = true
+  }
+}
