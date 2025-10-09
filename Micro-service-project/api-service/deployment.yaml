@@ -5,7 +5,7 @@ metadata:
   name: api-dep 
   labels:
     env: dev
-specs: 
+spec: 
   replicas: 3
   selector:
     matchLabels:
