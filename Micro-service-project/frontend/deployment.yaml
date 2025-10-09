@@ -15,7 +15,7 @@ spec:
       labels:
         env: dev 
     spec:
-      conatiners:
+      containers:
         - name: frontend-pod 
           image: mehulbisen/frontend:v1 
           ports:
