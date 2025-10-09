@@ -1,0 +1,18 @@
+apiversion: apps/v1
+kind: Deployment
+metadata: 
+  name: api-dep 
+  labels:
+    env: dev
+specs: 
+  replicas: 3
+  selectors:
+    matchLabels:
+      env: dev 
+  template: 
+    metadata:
+      labels:
+        env: dev
+    spec:
+      - name: frontend-pod
+        image: 
