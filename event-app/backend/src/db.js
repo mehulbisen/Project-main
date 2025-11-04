@@ -1,24 +1,18 @@
-import AWS from "aws-sdk";
-import mysql from "mysql2/promise";
+const AWS = require("aws-sdk");
+const mysql = require("mysql2/promise");
 
-// Initialize AWS Secrets Manager client
-const secretsManager = new AWS.SecretsManager({ region: "ap-south-1" });
-
-// 👇 Your actual secret ARN
+// Your actual secret ARN
 const secretArn = "arn:aws:secretsmanager:ap-south-1:561137843066:secret:prod/eventapps/rds-oYOmwy";
 
-// Function to fetch DB credentials from AWS Secrets Manager
+// Initialize Secrets Manager client
+const secretsManager = new AWS.SecretsManager({ region: "ap-south-1" });
+
+// Function to fetch DB credentials
 async function getDbCredentials() {
   try {
-    const data = await secretsManager
-      .getSecretValue({ SecretId: secretArn })
-      .promise();
-
+    const data = await secretsManager.getSecretValue({ SecretId: secretArn }).promise();
     const secret = JSON.parse(data.SecretString);
-
-    // Log (optional) to verify fetching success — remove in production
     console.log("✅ Successfully retrieved DB credentials from Secrets Manager");
-
     return {
       host: secret.host,
       user: secret.username,
@@ -31,12 +25,11 @@ async function getDbCredentials() {
   }
 }
 
-// Function to connect to database using credentials
-export async function connectToDatabase() {
-  const dbConfig = await getDbCredentials();
-
+// Function to connect to the database
+async function connectDB() {
   try {
-    const connection = await mysql.createConnection(dbConfig);
+    const config = await getDbCredentials();
+    const connection = await mysql.createConnection(config);
     console.log("✅ Connected to MySQL database successfully!");
     return connection;
   } catch (err) {
@@ -44,3 +37,5 @@ export async function connectToDatabase() {
     throw err;
   }
 }
+
+module.exports = { connectDB };
