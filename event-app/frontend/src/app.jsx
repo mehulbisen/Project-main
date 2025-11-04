@@ -1,18 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function App() {
   const [events, setEvents] = useState([]);
   const [form, setForm] = useState({ event_id: "", user_name: "", user_email: "" });
 
   useEffect(() => {
-    fetch("/api/events").then(r => r.json()).then(setEvents);
+    fetch("/api/events").then(r => r.json()).then(setEvents).catch(() => setEvents([]));
   }, []);
 
   async function book(e) {
     e.preventDefault();
-    await fetch("/api/book", { method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form) });
-    alert("Booking created");
+    await fetch("/api/book", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form)
+    });
+    alert("Booking created!");
   }
 
   return (
