@@ -9,6 +9,11 @@ app.use(bodyParser.json());
 // Initialize SNS client
 const sns = new SNSClient({ region: "ap-south-1" });
 
+// 🏠 Root route — add this
+app.get("/", (req, res) => {
+  res.send("🎉 Event Booking Backend is running successfully!");
+});
+
 // Route: Get all events
 app.get("/events", async (req, res) => {
   try {
