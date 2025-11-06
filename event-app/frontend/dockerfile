@@ -1,18 +1,9 @@
-# frontend/Dockerfile
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY package.json package-lock*.json ./
-RUN npm ci --include=dev
-# copy source
-COPY . .
-RUN npm run build
-
-# Serve with node
 FROM node:18-alpine
 WORKDIR /app
-COPY --from=builder /app/build ./build
 COPY package.json package-lock*.json ./
-RUN npm ci --only=production
-COPY server.js ./
-EXPOSE 80
-CMD ["node", "server.js"]
+RUN npm install
+COPY . .
+RUN npm run build
+RUN npm install -g serve
+EXPOSE 3000
+CMD ["serve", "-s", "build", "-l", "3000"]
